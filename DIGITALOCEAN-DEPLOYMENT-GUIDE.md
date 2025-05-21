@@ -46,8 +46,8 @@ Add the following environment variables in the App Platform setup:
 
 | Variable | Value | Encrypted |
 |----------|-------|-----------|
-| `DATABASE_URI` | `postgresql://YOUR_USERNAME:YOUR_PASSWORD@db-postgresql-syd1-86092-do-user-22012122-0.k.db.ondigitalocean.com:25060/defaultdb?sslmode=require` | Yes |
-| `PAYLOAD_SECRET` | `a75e27d5b7365e45f2f0fb5e` | Yes |
+| `DATABASE_URI` | `postgresql://YOUR_USERNAME:YOUR_PASSWORD@host:port/database?sslmode=require` | Yes |
+| `PAYLOAD_SECRET` | `your_payload_secret_here` | Yes |
 | `NEXT_PUBLIC_API_URL` | Will be automatically set by DigitalOcean | No |
 | `JOBADDER_CLIENT_ID` | Your JobAdder OAuth client ID | Yes |
 | `JOBADDER_CLIENT_SECRET` | Your JobAdder OAuth client secret | Yes |
