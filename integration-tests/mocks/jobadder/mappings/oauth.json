@@ -1,0 +1,47 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/oauth/token",
+        "bodyPatterns": [
+          {
+            "matches": ".*client_id.*client_secret.*"
+          }
+        ]
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "access_token": "test-access-token",
+          "token_type": "Bearer",
+          "expires_in": 3600
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/oauth/token",
+        "bodyPatterns": [
+          {
+            "matches": ".*invalid_client.*"
+          }
+        ]
+      },
+      "response": {
+        "status": 401,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "error": "invalid_client",
+          "error_description": "Client authentication failed"
+        }
+      }
+    }
+  ]
+}

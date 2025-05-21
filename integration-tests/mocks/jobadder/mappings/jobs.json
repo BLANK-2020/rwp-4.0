@@ -1,0 +1,77 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v2/jobs",
+        "headers": {
+          "Authorization": {
+            "matches": "Bearer .*"
+          }
+        }
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": {
+            "id": "{{randomValue length=8 type='ALPHANUMERIC'}}",
+            "status": "success"
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "urlPattern": "/v2/jobs/[A-Za-z0-9]+",
+        "headers": {
+          "Authorization": {
+            "matches": "Bearer .*"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": {
+            "status": "success"
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v2/jobs",
+        "headers": {
+          "Authorization": {
+            "matches": "Bearer .*"
+          }
+        },
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$.title",
+            "contains": "Failed Job"
+          }
+        ]
+      },
+      "response": {
+        "status": 500,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "error": "API timeout",
+          "message": "Request timed out"
+        },
+        "fixedDelayMilliseconds": 2000
+      }
+    }
+  ]
+}

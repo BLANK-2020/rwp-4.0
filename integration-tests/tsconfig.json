@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@rwp/*": ["../*/src/*"]
+    },
+    "types": ["jest", "node"]
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules"]
+}

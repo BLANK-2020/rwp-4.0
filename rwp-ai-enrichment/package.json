@@ -1,0 +1,42 @@
+{
+  "name": "rwp-ai-enrichment",
+  "version": "1.0.0",
+  "description": "AI-powered data enrichment and analysis for RWP 4.0",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "test": "jest",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "rwp-core": "1.0.0",
+    "rwp-analytics": "1.0.0",
+    "openai": "^4.28.0",
+    "langchain": "^0.1.9",
+    "@pinecone-database/pinecone": "^1.1.2",
+    "bullmq": "^4.12.4",
+    "pdf-parse": "^1.1.1",
+    "node-html-parser": "^6.1.11",
+    "axios": "^1.9.0",
+    "ioredis": "^5.3.2",
+    "pg": "^8.11.3",
+    "date-fns": "^3.0.6"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^22.5.4",
+    "@types/pg": "^8.10.9",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.16.0",
+    "jest": "^29.7.0",
+    "typescript": "5.7.3"
+  },
+  "engines": {
+    "node": "^18.20.2 || >=20.9.0"
+  }
+}
