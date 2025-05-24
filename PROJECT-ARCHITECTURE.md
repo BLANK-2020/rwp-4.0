@@ -2,175 +2,235 @@
 
 ## Overview
 
-The Recruitment Web Platform (RWP) 4.0 is a comprehensive solution designed to streamline recruitment processes, enhance candidate experiences, and provide powerful analytics for recruitment agencies. The platform is built using a microservices architecture, with each service focused on a specific domain of functionality.
+The Recruitment Web Platform (RWP) 4.0 is a comprehensive solution for recruitment agencies, designed to streamline the recruitment process, enhance candidate experience, and provide valuable analytics. The platform is built using a microservices architecture with a monorepo structure, allowing for modular development and deployment.
 
 ## Repository Structure
 
-The project is organized into multiple repositories, each serving a specific purpose in the overall architecture:
+The project is organized as a monorepo with multiple packages, each responsible for a specific domain of functionality:
 
-### Main Repository (RWP 4.0)
+```
+RWP 4.0/
+├── rwp-core/            # Core infrastructure and shared functionality
+├── rwp-jobboard/        # Public-facing job board
+├── rwp-jobadder/        # JobAdder ATS integration
+├── rwp-events/          # Event tracking system
+├── rwp-analytics/       # Analytics and reporting
+├── rwp-ai-enrichment/   # AI-powered data enrichment
+├── rwp-retargeting/     # Candidate retargeting
+└── rwp-tenants/         # Multi-tenant management
+```
 
-The main repository serves as the central hub for the entire platform. It contains:
+## Package Descriptions
 
-- Common configuration files
-- Deployment scripts
-- Documentation
-- Core libraries and utilities
-- Scripts for distributing shared code to sub-repositories
+### rwp-core
 
-### Sub-Repositories
+**Purpose**: Provides the core infrastructure and shared functionality for the entire platform.
 
-#### 1. rwp-core
-
-**Purpose**: Provides the core infrastructure and shared functionality used by all other services.
-
-**Key Components**:
-- Payload CMS configuration
-- Database adapters
+**Key Features**:
+- Payload CMS integration for content management
+- Database models and schemas
 - Authentication and authorization
-- Shared utilities and formatters
-- Core data models and collections
+- Shared utilities and components
+- API endpoints for core functionality
 
-#### 2. rwp-jobboard
+**Technologies**:
+- Next.js
+- Payload CMS
+- PostgreSQL
+- TypeScript
 
-**Purpose**: Manages the public-facing job board where candidates can search and apply for jobs.
+### rwp-jobboard
 
-**Key Components**:
-- Job listing pages
-- Job search functionality
-- Job filtering by sector, location, etc.
+**Purpose**: Delivers a public-facing job board for candidates to search and apply for jobs.
+
+**Key Features**:
+- Job search and filtering
+- Job detail pages
 - Application forms
-- SEO optimization for job listings
+- Sector/category browsing
+- Mobile-responsive design
 
-#### 3. rwp-jobadder
+**Technologies**:
+- Next.js
+- React
+- TypeScript
+- CSS Modules
 
-**Purpose**: Integrates with the JobAdder ATS (Applicant Tracking System) to sync job data.
+### rwp-jobadder
 
-**Key Components**:
-- JobAdder API integration
-- OAuth authentication
-- Webhook handlers for real-time updates
-- Job data transformation and normalization
+**Purpose**: Integrates with the JobAdder Applicant Tracking System (ATS) to sync jobs and candidates.
+
+**Key Features**:
+- OAuth authentication with JobAdder
+- Job synchronization
 - Candidate data synchronization
+- Webhook handling for real-time updates
+- Error handling and retry mechanisms
 
-#### 4. rwp-events
+**Technologies**:
+- Node.js
+- Axios for API calls
+- TypeScript
+- JWT for authentication
 
-**Purpose**: Tracks user interactions and events across the platform for analytics and personalization.
+### rwp-events
 
-**Key Components**:
+**Purpose**: Tracks user events and interactions across the platform for analytics and personalization.
+
+**Key Features**:
 - Event tracking API
 - Event storage and processing
-- Integration with analytics services
 - Real-time event streaming
+- Privacy-compliant data collection
 
-#### 5. rwp-analytics
+**Technologies**:
+- Node.js
+- TypeScript
+- PostgreSQL for event storage
+- Redis for event streaming
 
-**Purpose**: Provides analytics and reporting capabilities for recruitment metrics.
+### rwp-analytics
 
-**Key Components**:
-- Dashboard visualizations
-- Performance metrics
-- Conversion tracking
-- A/B testing analysis
+**Purpose**: Provides analytics and reporting on platform usage, job performance, and candidate behavior.
+
+**Key Features**:
+- Dashboard for recruitment metrics
+- Job performance analytics
+- Candidate source tracking
+- A/B testing results
 - Custom report generation
 
-#### 6. rwp-ai-enrichment
+**Technologies**:
+- React for dashboards
+- Chart.js for visualizations
+- TypeScript
+- PostgreSQL for data storage
 
-**Purpose**: Uses AI to enrich candidate and job data for better matching and insights.
+### rwp-ai-enrichment
 
-**Key Components**:
-- Resume parsing
-- Skill extraction
-- Job description analysis
-- Candidate-job matching algorithms
+**Purpose**: Uses AI to enrich candidate data, improve job matching, and provide insights.
+
+**Key Features**:
+- CV parsing and analysis
+- Skill extraction and categorization
+- Job-candidate matching algorithms
+- Sentiment analysis of candidate communications
 - Automated candidate scoring
 
-#### 7. rwp-retargeting
+**Technologies**:
+- OpenAI API
+- LangChain
+- Vector databases (Pinecone)
+- Node.js
+- TypeScript
 
-**Purpose**: Manages retargeting campaigns to re-engage candidates who have previously interacted with job listings.
+### rwp-retargeting
 
-**Key Components**:
-- Retargeting pixel integration
+**Purpose**: Manages candidate retargeting campaigns and A/B testing for job listings.
+
+**Key Features**:
+- A/B testing framework for job descriptions
+- Pixel tracking for retargeting
 - Campaign management
-- A/B testing for job descriptions and apply buttons
 - Conversion tracking
+- Integration with marketing platforms
 
-#### 8. rwp-tenants
+**Technologies**:
+- React
+- TypeScript
+- A/B testing libraries
+- Pixel tracking implementation
 
-**Purpose**: Manages multi-tenant functionality for supporting multiple recruitment agencies on the platform.
+### rwp-tenants
 
-**Key Components**:
-- Tenant configuration
-- White-labeling
-- Custom domain support
-- Tenant-specific settings and branding
+**Purpose**: Manages multi-tenant functionality, allowing the platform to serve multiple recruitment agencies.
 
-## Technical Architecture
+**Key Features**:
+- Tenant configuration and management
+- Tenant-specific branding and customization
+- Tenant isolation and security
+- Tenant billing and subscription management
 
-### Frontend
+**Technologies**:
+- Next.js
+- React
+- TypeScript
+- PostgreSQL for tenant data
 
-- **Framework**: Next.js (App Router)
-- **UI Components**: React
-- **Styling**: CSS Modules / Tailwind CSS
-- **State Management**: React Context / Redux
+## Architecture Diagram
 
-### Backend
-
-- **CMS**: Payload CMS
-- **API**: Next.js API Routes / Express
-- **Database**: PostgreSQL
-- **Authentication**: JWT / OAuth
-
-### Infrastructure
-
-- **Deployment**: Docker / Docker Compose
-- **Hosting**: Digital Ocean
-- **CI/CD**: GitHub Actions
-- **Monitoring**: Pino logging
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│                 │     │                 │     │                 │
+│   rwp-jobboard  │◄────┤    rwp-core     │────►│  rwp-analytics  │
+│                 │     │                 │     │                 │
+└────────┬────────┘     └────────┬────────┘     └────────┬────────┘
+         │                       │                       │
+         │                       │                       │
+         │                       │                       │
+┌────────▼────────┐     ┌────────▼────────┐     ┌────────▼────────┐
+│                 │     │                 │     │                 │
+│   rwp-events    │◄────┤   rwp-tenants   │────►│rwp-ai-enrichment│
+│                 │     │                 │     │                 │
+└────────┬────────┘     └────────┬────────┘     └────────┬────────┘
+         │                       │                       │
+         │                       │                       │
+         │                       │                       │
+┌────────▼────────┐     ┌────────▼────────┐
+│                 │     │                 │
+│ rwp-retargeting │     │  rwp-jobadder   │
+│                 │     │                 │
+└─────────────────┘     └─────────────────┘
+```
 
 ## Data Flow
 
-1. **Job Data Flow**:
-   - Jobs are created in JobAdder ATS
-   - rwp-jobadder syncs job data via API or webhooks
-   - Jobs are stored in the central database
-   - rwp-jobboard displays jobs to candidates
+1. **Job Synchronization**:
+   - JobAdder API → rwp-jobadder → rwp-core → rwp-jobboard
 
-2. **Candidate Application Flow**:
-   - Candidates apply through rwp-jobboard
-   - Application data is stored and enriched by rwp-ai-enrichment
-   - Application is sent to JobAdder via rwp-jobadder
-   - Events are tracked by rwp-events
+2. **Candidate Application**:
+   - rwp-jobboard → rwp-core → rwp-jobadder → JobAdder API
 
-3. **Analytics Flow**:
-   - User interactions are tracked by rwp-events
-   - Event data is processed by rwp-analytics
-   - Insights are displayed in dashboards
-   - Retargeting campaigns are optimized based on analytics
+3. **Event Tracking**:
+   - User Interaction → rwp-events → rwp-analytics
 
-## Shared Code Management
+4. **Candidate Enrichment**:
+   - Candidate Data → rwp-ai-enrichment → rwp-core
 
-The project uses a custom code-sharing approach:
-
-1. Core files are defined in the main repository
-2. The `distribute-files.sh` script copies these files to all sub-repositories
-3. Each sub-repository can extend or override the core functionality as needed
-4. The `push-changes.sh` script helps synchronize changes across repositories
+5. **Retargeting**:
+   - User Behavior → rwp-events → rwp-retargeting → Marketing Platforms
 
 ## Development Workflow
 
-1. Clone the main repository
-2. Run `create-repos.sh` to set up all sub-repositories
-3. Run `distribute-files.sh` to copy core files to sub-repositories
-4. Make changes in the appropriate repository
-5. Use `push-changes.sh` to synchronize changes
+The project uses npm workspaces to manage dependencies between packages. This allows for:
+
+1. Shared dependencies across packages
+2. Local package references without publishing to npm
+3. Running commands across all packages or specific packages
+4. Simplified development workflow
+
+To set up the development environment, run:
+
+```bash
+./setup-workspace.sh
+```
+
+This will install all dependencies and build all packages.
 
 ## Deployment
 
 The platform can be deployed in several ways:
 
-1. **Development**: Local Docker Compose setup
-2. **Staging**: Digital Ocean App Platform
-3. **Production**: Digital Ocean Kubernetes or App Platform
+1. **Monolithic Deployment**: All packages deployed together
+2. **Microservices Deployment**: Each package deployed separately
+3. **Hybrid Deployment**: Core packages deployed together, specialized packages deployed separately
 
-Deployment scripts are provided in the main repository to streamline the deployment process.
+Deployment scripts are provided in the root directory:
+
+- `deploy.sh`: General deployment script
+- `deploy-to-digitalocean.sh`: DigitalOcean-specific deployment
+- `deploy-to-digitalocean-direct.sh`: Direct deployment to DigitalOcean
+
+## Conclusion
+
+The RWP 4.0 architecture provides a flexible, scalable, and maintainable platform for recruitment agencies. By separating concerns into distinct packages, the platform can evolve and scale independently in different areas while maintaining a cohesive user experience.

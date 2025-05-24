@@ -31,6 +31,12 @@ This project uses a multi-repository architecture:
   - `rwp-retargeting`: Candidate retargeting
   - `rwp-tenants`: Multi-tenant management
 
+The project uses npm workspaces to manage dependencies between packages, allowing for:
+- Shared dependencies across packages
+- Local package references without publishing to npm
+- Running commands across all packages or specific packages
+- Simplified development workflow
+
 ## Documentation
 
 - [Project Architecture](./PROJECT-ARCHITECTURE.md): Overview of the system architecture and repository structure
@@ -72,9 +78,9 @@ This project uses a multi-repository architecture:
    ./distribute-files.sh
    ```
 
-4. Install dependencies:
+4. Set up npm workspaces and install dependencies:
    ```bash
-   npm install
+   ./setup-workspace.sh
    ```
 
 5. Set up environment variables:
@@ -91,7 +97,17 @@ This project uses a multi-repository architecture:
 ### Development Workflow
 
 1. Make changes in the appropriate repository
-2. Test changes locally
+2. Test changes locally using npm workspaces:
+   ```bash
+   # Run a command in a specific package
+   npm run dev -w rwp-core
+   
+   # Run a command in all packages
+   npm run test --workspaces
+   
+   # Add a dependency to a specific package
+   npm install express -w rwp-core
+   ```
 3. Use `push-changes.sh` to synchronize changes across repositories
 4. Deploy using the deployment scripts
 

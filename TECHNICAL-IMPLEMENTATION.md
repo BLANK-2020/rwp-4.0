@@ -2,281 +2,318 @@
 
 ## Technology Stack
 
+The RWP 4.0 platform is built using the following technologies:
+
 ### Frontend
-- **Framework**: Next.js 14.0.4 with App Router
-- **UI Library**: React 18
-- **Styling**: CSS Modules / Tailwind CSS
-- **State Management**: React Context API
-- **Data Fetching**: Next.js Server Components / React Query
-- **Form Handling**: React Hook Form
+- **Next.js**: React framework for server-side rendering and static site generation
+- **React**: UI library for building component-based interfaces
+- **TypeScript**: Typed superset of JavaScript for improved developer experience
+- **CSS Modules**: Scoped CSS for component styling
+- **Chart.js**: Library for data visualization
 
 ### Backend
-- **CMS**: Payload CMS 3.x
-- **API Framework**: Next.js API Routes / Express
-- **Database**: PostgreSQL with Payload DB Postgres adapter
-- **Authentication**: JWT via Payload CMS / OAuth for ATS integrations
-- **File Storage**: Local / S3 compatible storage
+- **Node.js**: JavaScript runtime for server-side code
+- **Express**: Web framework for Node.js (used as fallback server)
+- **Payload CMS**: Headless CMS for content management
+- **Next.js API Routes**: Serverless functions for API endpoints
 
-### Infrastructure
-- **Containerization**: Docker / Docker Compose
-- **Hosting**: Digital Ocean App Platform
-- **CI/CD**: GitHub Actions
-- **Monitoring**: Pino logging
-- **Environment Variables**: dotenv
+### Database
+- **PostgreSQL**: Primary relational database
+- **Redis**: In-memory data store for caching and pub/sub
+- **Pinecone**: Vector database for AI embeddings
 
-## Core Components
+### AI and Machine Learning
+- **OpenAI API**: For natural language processing and generation
+- **LangChain**: Framework for building LLM-powered applications
+- **Vector Embeddings**: For semantic search and matching
 
-### Payload CMS Configuration
+### DevOps
+- **Docker**: Containerization for consistent deployment
+- **GitHub Actions**: CI/CD pipeline
+- **DigitalOcean**: Cloud hosting platform
 
-The core of the platform is built on Payload CMS, which provides:
+### Testing
+- **Jest**: Testing framework
+- **React Testing Library**: Testing utilities for React components
+- **Axios Mock Adapter**: For mocking HTTP requests in tests
 
-- Content management
-- Authentication and authorization
-- API generation
-- Admin dashboard
+## Code Organization
 
-The configuration is defined in `src/payload.config.ts` and includes:
+The codebase follows a modular structure with clear separation of concerns:
 
-```typescript
-export default buildConfig({
-  admin: {
-    user: Users.slug,
-    importMap: {
-      baseDir: path.resolve(dirname),
-    },
-  },
-  collections,
-  editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
-  typescript: {
-    outputFile: path.resolve(dirname, 'payload-types.ts'),
-  },
-  db: postgresAdapter({
-    pool: dbConfig,
-  }),
-  debug: true,
-  sharp,
-  plugins: [],
-})
+### Package Structure
+
+Each package in the monorepo follows a similar structure:
+
 ```
-
-### Collections
-
-The platform uses the following collections:
-
-1. **Users**: Authentication and user management
-2. **Jobs**: Job listings and details
-3. **Candidates**: Candidate profiles and applications
-4. **Sectors**: Industry sectors for job categorization
-5. **Tenants**: Multi-tenant configuration
-6. **Events**: User interaction tracking
-7. **Analytics**: Aggregated analytics data
-8. **Media**: File uploads and media management
+package-name/
+├── src/
+│   ├── app/              # Next.js app directory
+│   │   ├── (frontend)/   # Frontend routes
+│   │   ├── (payload)/    # Payload CMS routes
+│   │   ├── api/          # API routes
+│   ├── collections/      # Payload CMS collections
+│   ├── lib/              # Shared utilities
+│   ├── plugins/          # Plugin integrations
+│   └── tests/            # Test files
+├── package.json          # Package configuration
+├── tsconfig.json         # TypeScript configuration
+└── README.md             # Package documentation
+```
 
 ### API Structure
 
-The API is structured using Next.js API routes:
-
-- `/api/jobs/*`: Job-related endpoints
-- `/api/candidates/*`: Candidate-related endpoints
-- `/api/events/*`: Event tracking endpoints
-- `/api/analytics/*`: Analytics endpoints
-- `/api/oauth/*`: OAuth integration endpoints
-- `/api/webhooks/*`: Webhook handlers for external services
-
-### ATS Integration
-
-The JobAdder integration is implemented in `src/plugins/ats/integrations/jobAdder/` and includes:
-
-- **OAuth Authentication**: Handles authentication with JobAdder API
-- **Data Synchronization**: Syncs jobs and candidates
-- **Webhooks**: Processes real-time updates
-- **Data Transformation**: Normalizes data between systems
-
-Example OAuth flow:
+API endpoints follow a consistent pattern:
 
 ```typescript
-// Authorization endpoint
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const redirectUri = searchParams.get('redirectUri') || process.env.JOBADDER_REDIRECT_URI;
-  
-  const authUrl = `https://api.jobadder.com/oauth2/authorize?client_id=${process.env.JOBADDER_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=jobs candidates`;
-  
-  return Response.redirect(authUrl);
+// src/app/api/resource/route.ts
+import { NextResponse } from 'next/server';
+
+export async function GET(request: Request) {
+  try {
+    // Implementation
+    return NextResponse.json({ data });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
 
-// Callback endpoint
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const code = searchParams.get('code');
-  
-  if (!code) {
-    return new Response('Authorization code missing', { status: 400 });
-  }
-  
+export async function POST(request: Request) {
   try {
-    const tokens = await exchangeCodeForTokens(code);
-    // Store tokens securely
-    await storeTokens(tokens);
-    
-    return Response.redirect('/admin/settings/integrations');
+    const body = await request.json();
+    // Implementation
+    return NextResponse.json({ data }, { status: 201 });
   } catch (error) {
-    console.error('OAuth error:', error);
-    return new Response('Authentication failed', { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 ```
 
+### Database Models
+
+Database models are defined using Payload CMS collections:
+
+```typescript
+// src/collections/Jobs.ts
+import { CollectionConfig } from 'payload/types';
+
+export const Jobs: CollectionConfig = {
+  slug: 'jobs',
+  admin: {
+    useAsTitle: 'title',
+  },
+  access: {
+    read: () => true,
+  },
+  fields: [
+    {
+      name: 'title',
+      type: 'text',
+      required: true,
+    },
+    // Other fields
+  ],
+};
+```
+
+## Key Implementation Details
+
+### Multi-Tenancy
+
+The platform supports multiple tenants (recruitment agencies) through the `rwp-tenants` package:
+
+- Each tenant has its own configuration, branding, and data
+- Tenant identification is done through subdomain or path prefix
+- Database queries are automatically scoped to the current tenant
+- Assets and media are stored in tenant-specific directories
+
+### JobAdder Integration
+
+The JobAdder integration in `rwp-jobadder` package handles:
+
+1. **OAuth Authentication**:
+   - OAuth 2.0 flow for secure API access
+   - Token refresh and management
+   - Secure storage of credentials
+
+2. **Job Synchronization**:
+   - Periodic polling of JobAdder API
+   - Differential updates to minimize data transfer
+   - Mapping JobAdder fields to internal schema
+
+3. **Webhook Handling**:
+   - Real-time updates from JobAdder
+   - Event-based processing
+   - Idempotent operations for reliability
+
 ### Event Tracking
 
-The event tracking system captures user interactions:
+The event tracking system in `rwp-events` package:
 
-- Page views
-- Job views
-- Search queries
-- Application starts/completions
-- Click events
+1. Captures user interactions:
+   - Page views
+   - Job views
+   - Application starts/completions
+   - Search queries
 
-Events are stored in the database and processed for analytics.
+2. Processes events:
+   - Enriches with context data
+   - Validates and sanitizes
+   - Stores in database
 
-### Analytics
+3. Publishes events:
+   - To analytics system
+   - To retargeting system
+   - To external integrations
 
-The analytics system processes event data to provide insights:
+### AI Enrichment
 
-- Job performance metrics
-- Conversion rates
-- User engagement
-- A/B test results
-- Custom reports
+The AI enrichment system in `rwp-ai-enrichment` package:
 
-### Multi-tenancy
+1. **CV Parsing**:
+   - Extracts structured data from CVs
+   - Identifies skills, experience, education
+   - Normalizes data for consistency
 
-The platform supports multiple tenants (recruitment agencies) through:
+2. **Candidate Scoring**:
+   - Matches candidates to job requirements
+   - Calculates fit scores
+   - Provides explanations for scores
 
-- Tenant-specific configuration
-- Domain-based routing
-- White-labeling
-- Isolated data access
-
-## Frontend Implementation
-
-### Job Board
-
-The job board is implemented using Next.js App Router:
-
-- `/src/app/(frontend)/page.tsx`: Homepage
-- `/src/app/(frontend)/jobs/page.tsx`: Job listings
-- `/src/app/(frontend)/jobs/[slug]/page.tsx`: Job details
-- `/src/app/(frontend)/search/page.tsx`: Search results
-- `/src/app/(frontend)/sectors/[slug]/page.tsx`: Sector-specific listings
-
-### Admin Dashboard
-
-The admin dashboard is provided by Payload CMS and extended with custom components:
-
-- `/src/app/(payload)/admin/analytics/page.tsx`: Analytics dashboard
-- `/src/app/(payload)/admin/analytics/components/AnalyticsCharts.tsx`: Chart components
-
-### Responsive Design
-
-The frontend is fully responsive, supporting:
-
-- Desktop
-- Tablet
-- Mobile
+3. **Job Enhancement**:
+   - Improves job descriptions
+   - Suggests keywords for better visibility
+   - A/B tests different descriptions
 
 ## Data Flow
 
-### Job Synchronization
+### Job Application Flow
 
-1. Jobs are created or updated in JobAdder
-2. Webhook notification is sent to `/api/webhooks/jobadder`
-3. Job data is fetched from JobAdder API
-4. Data is transformed to match internal schema
-5. Job is created or updated in the database
-6. Job becomes available on the job board
+1. Candidate views job on `rwp-jobboard`
+2. `rwp-events` tracks the job view
+3. Candidate starts application
+4. Application data is submitted to `rwp-core`
+5. `rwp-core` forwards to `rwp-jobadder`
+6. `rwp-jobadder` creates candidate in JobAdder
+7. `rwp-ai-enrichment` processes the CV
+8. Candidate receives confirmation
+9. Recruiter is notified in JobAdder
 
-### Candidate Application
+### Analytics Flow
 
-1. Candidate fills out application form
-2. Form data is validated
-3. Candidate record is created in the database
-4. Application is enriched with AI analysis
-5. Application is sent to JobAdder
-6. Confirmation is sent to the candidate
-
-### Analytics Processing
-
-1. Events are tracked via `/api/events/track`
-2. Raw events are stored in the database
-3. Scheduled tasks process and aggregate events
-4. Aggregated data is stored in the analytics collection
-5. Dashboards display the processed data
-
-## Deployment Architecture
-
-### Development Environment
-
-Local development uses:
-
-- Next.js development server
-- Local PostgreSQL database
-- Docker Compose for dependencies
-
-### Staging Environment
-
-Staging is deployed to Digital Ocean App Platform:
-
-- Containerized application
-- Managed PostgreSQL database
-- Staging-specific environment variables
-
-### Production Environment
-
-Production is deployed to Digital Ocean App Platform or Kubernetes:
-
-- Horizontally scaled application containers
-- Managed PostgreSQL database with replication
-- Production-specific environment variables
-- CDN for static assets
+1. User interactions are tracked by `rwp-events`
+2. Events are stored in database
+3. `rwp-analytics` processes events
+4. Aggregated data is stored
+5. Dashboards display metrics
+6. Reports are generated
 
 ## Security Considerations
 
-- **Authentication**: JWT-based authentication with proper expiration
-- **Authorization**: Role-based access control
-- **Data Protection**: HTTPS for all communications
-- **API Security**: Rate limiting and input validation
-- **Database Security**: Parameterized queries and proper indexing
-- **Environment Variables**: Secure storage of secrets
+### Authentication and Authorization
 
-## Performance Optimizations
+- JWT-based authentication
+- Role-based access control
+- Tenant isolation
+- API key management for integrations
 
-- **Server-Side Rendering**: For SEO and initial load performance
-- **Static Generation**: For static pages and assets
-- **Image Optimization**: Using Next.js Image component and Sharp
-- **Caching**: API response caching and database query caching
-- **Code Splitting**: Automatic code splitting by Next.js
-- **Database Indexing**: Proper indexes for common queries
+### Data Protection
+
+- PII (Personally Identifiable Information) handling
+- GDPR compliance
+- Data retention policies
+- Encryption of sensitive data
+
+### API Security
+
+- Rate limiting
+- CORS configuration
+- Input validation
+- Output sanitization
 
 ## Testing Strategy
 
-- **Unit Tests**: Jest for component and utility testing
-- **Integration Tests**: Testing API endpoints and data flow
-- **End-to-End Tests**: Cypress for full user journey testing
-- **Performance Testing**: Lighthouse for performance metrics
+### Unit Testing
+
+- Component tests with React Testing Library
+- Utility function tests with Jest
+- API handler tests with mocked requests
+
+### Integration Testing
+
+- API endpoint tests with database integration
+- Cross-package functionality tests
+- Webhook handling tests
+
+### End-to-End Testing
+
+- User flow tests
+- JobAdder integration tests
+- Analytics flow tests
+
+## Performance Optimization
+
+### Frontend
+
+- Server-side rendering for initial load
+- Client-side navigation for subsequent pages
+- Image optimization
+- Code splitting
+- Lazy loading
+
+### Backend
+
+- Database query optimization
+- Caching with Redis
+- Batch processing for heavy operations
+- Asynchronous processing for non-critical tasks
+
+### Database
+
+- Indexing strategy
+- Connection pooling
+- Query optimization
+- Data partitioning for multi-tenancy
+
+## Deployment
+
+### Development Environment
+
+- Local development with npm workspaces
+- Docker Compose for dependencies
+- Mock services for external APIs
+
+### Staging Environment
+
+- DigitalOcean App Platform
+- Automated deployments from staging branch
+- Test data and configurations
+
+### Production Environment
+
+- DigitalOcean App Platform
+- Blue-green deployments
+- Database backups
+- Monitoring and alerting
 
 ## Monitoring and Logging
 
-- **Error Tracking**: Centralized error logging
-- **Performance Monitoring**: API response times and database queries
-- **User Analytics**: Conversion and engagement metrics
-- **Server Monitoring**: CPU, memory, and network usage
+### Logging
 
-## Future Enhancements
+- Structured logging with Pino
+- Log levels (debug, info, warn, error)
+- Context enrichment
+- Log aggregation
 
-- **AI-Powered Job Matching**: Enhanced candidate-job matching algorithms
-- **Advanced Analytics**: Predictive analytics for recruitment trends
-- **Mobile App**: Native mobile applications for candidates
-- **Integration Marketplace**: Additional ATS and CRM integrations
-- **Internationalization**: Multi-language support
+### Monitoring
+
+- Health check endpoints
+- Performance metrics
+- Error tracking
+- User experience monitoring
+
+## Conclusion
+
+The RWP 4.0 platform is designed with scalability, maintainability, and performance in mind. The modular architecture allows for independent development and deployment of components, while the shared core ensures consistency across the platform.
+
+The use of modern technologies and best practices enables a robust and flexible system that can adapt to changing requirements and scale with the business.
