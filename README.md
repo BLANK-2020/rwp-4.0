@@ -1,156 +1,104 @@
-# Recruitment Platform 4.1
+# Recruitment Web Platform (RWP) 4.0
 
-A modular, multi-tenant SaaS platform designed for recruitment agencies. This platform provides custom domain routing, hybrid job board functionality, JobAdder integration, and retargeting infrastructure.
+A comprehensive platform for recruitment agencies to manage job listings, candidate applications, and recruitment analytics.
 
-## Features
+## Overview
 
-- **Multi-tenant Architecture**: Isolate data between different recruitment agencies
-- **Custom Domain Routing**: Allow agencies to use their own domains
-- **Hybrid Job Board**: Advanced job board with sectors, search, and filtering
-- **JobAdder Integration**: Sync jobs from JobAdder ATS
-- **Stripe Billing**: Subscription management for tenants
-- **Marketing Pixels**: Tenant-specific marketing pixel integration
-- **Retargeting Infrastructure**: Track user interactions and trigger retargeting campaigns
-- **Analytics Dashboard**: Visualize job board performance metrics
+The Recruitment Web Platform (RWP) 4.0 is a modern, microservices-based solution designed to streamline recruitment processes, enhance candidate experiences, and provide powerful analytics for recruitment agencies. The platform integrates with Applicant Tracking Systems (ATS) like JobAdder to synchronize job data and candidate applications.
 
-## Quick Start
+## Key Features
 
-To spin up this project locally, follow these steps:
+- **Job Board**: Public-facing job listings with search and filtering
+- **ATS Integration**: Seamless integration with JobAdder and other ATS systems
+- **Analytics**: Comprehensive recruitment metrics and reporting
+- **AI Enrichment**: Intelligent candidate and job data analysis
+- **Event Tracking**: Detailed tracking of user interactions
+- **Retargeting**: Re-engage candidates through targeted campaigns
+- **Multi-tenancy**: Support for multiple recruitment agencies
+
+## Repository Structure
+
+This project uses a multi-repository architecture:
+
+- **Main Repository (RWP 4.0)**: Core configuration, documentation, and shared code
+- **Sub-repositories**:
+  - `rwp-core`: Core infrastructure and shared functionality
+  - `rwp-jobboard`: Public-facing job board
+  - `rwp-jobadder`: JobAdder ATS integration
+  - `rwp-events`: Event tracking system
+  - `rwp-analytics`: Analytics and reporting
+  - `rwp-ai-enrichment`: AI-powered data enrichment
+  - `rwp-retargeting`: Candidate retargeting
+  - `rwp-tenants`: Multi-tenant management
+
+## Documentation
+
+- [Project Architecture](./PROJECT-ARCHITECTURE.md): Overview of the system architecture and repository structure
+- [Technical Implementation](./TECHNICAL-IMPLEMENTATION.md): Detailed technical documentation
+- [Setup Troubleshooting](./SETUP-TROUBLESHOOTING.md): Common issues and solutions
+- [Deployment Guide](./DEPLOYMENT.md): Deployment instructions
+- [Digital Ocean Deployment](./DIGITALOCEAN-DEPLOYMENT-GUIDE.md): Specific guide for Digital Ocean
+
+## Technology Stack
+
+- **Frontend**: Next.js, React
+- **Backend**: Payload CMS, Express
+- **Database**: PostgreSQL
+- **Infrastructure**: Docker, Digital Ocean
+
+## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- PostgreSQL database
-- JobAdder API credentials (for JobAdder integration)
-- Stripe API credentials (for billing)
-- Marketing pixel IDs (for retargeting)
+- Node.js 18.x or later
+- PostgreSQL 14.x or later
+- Docker and Docker Compose (optional)
 
-### Development
+### Installation
 
-1. Clone the repository
-2. Copy the environment variables: `cp .env.example .env`
-3. Update the `.env` file with your credentials:
-   - `DATABASE_URI`: PostgreSQL connection string
-   - `JOBADDER_CLIENT_ID` and `JOBADDER_CLIENT_SECRET`: JobAdder OAuth credentials
-   - `STRIPE_SECRET_KEY` and other Stripe variables (if using Stripe)
-4. Install dependencies: `npm install`
-5. Start the development server: `npm run dev`
-6. Open `http://localhost:3000` in your browser
+1. Clone the main repository:
+   ```bash
+   git clone https://github.com/your-org/rwp-4.0.git
+   cd rwp-4.0
+   ```
 
-### Docker (Optional)
+2. Create the sub-repositories:
+   ```bash
+   ./create-repos.sh
+   ```
 
-If you prefer to use Docker for local development, you can use the provided docker-compose.yml file:
+3. Distribute core files to sub-repositories:
+   ```bash
+   ./distribute-files.sh
+   ```
 
-```bash
-docker-compose up
-```
+4. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## Multi-tenant Architecture
+5. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
 
-The platform is designed to support multiple recruitment agencies (tenants) with complete data isolation:
+6. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-- Each tenant has their own branding, jobs, and users
-- Custom domain routing allows tenants to use their own domains
-- JWT authentication includes tenant scoping for security
-- Tenant-specific marketing pixel configuration
+### Development Workflow
 
-## Hybrid Job Board
+1. Make changes in the appropriate repository
+2. Test changes locally
+3. Use `push-changes.sh` to synchronize changes across repositories
+4. Deploy using the deployment scripts
 
-The platform includes a comprehensive job board with advanced features:
+## Contributing
 
-### Features
+Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
-- **Job Listings**: Display jobs with filtering and pagination
-- **Sector Browsing**: Browse jobs by industry sector
-- **Advanced Search**: Search jobs by keyword, location, and more
-- **Featured Jobs**: Highlight premium job listings
-- **SEO Optimization**: SEO-friendly URLs and metadata
-- **Responsive Design**: Mobile-friendly job board
+## License
 
-### Components
-
-- **Job Card**: Display job summary information
-- **Job Detail Page**: Show comprehensive job information
-- **Sector Pages**: Browse jobs by industry sector
-- **Search Page**: Advanced job search functionality
-
-## Retargeting Infrastructure
-
-The platform includes a comprehensive retargeting infrastructure:
-
-### Features
-
-- **Event Tracking**: Track job views, apply starts, and apply completions
-- **Marketing Pixels**: Integration with Facebook Pixel, LinkedIn Insight Tag, and Google Tag Manager
-- **Consent Management**: GDPR-compliant consent banner for tracking
-- **Abandoned Application Detection**: Identify and retarget users who abandon applications
-- **Analytics Dashboard**: Visualize tracking data and conversion metrics
-
-### Components
-
-- **Consent Banner**: Allow users to manage tracking preferences
-- **Event Tracking API**: Record user interactions with jobs
-- **Marketing Pixels**: Conditionally load marketing pixels based on consent
-- **Abandoned Application Detection**: Scheduled task to detect abandoned applications
-
-## JobAdder Integration
-
-The platform includes a complete JobAdder integration for syncing jobs:
-
-### Setup
-
-1. Register an application in the JobAdder Developer Portal
-2. Add the OAuth credentials to your `.env` file
-3. Enable the JobAdder feature for a tenant in the admin panel
-
-### Features
-
-- **OAuth Authentication**: Secure connection to JobAdder
-- **Webhook Integration**: Real-time job updates
-- **Scheduled Sync**: Periodic job synchronization
-- **Manual Sync**: Trigger job sync manually
-
-### API Endpoints
-
-- `GET /api/oauth/jobadder/authorize`: Initiate OAuth flow
-- `GET /api/oauth/jobadder/callback`: Handle OAuth callback
-- `POST /api/webhooks/jobadder`: Receive webhook events
-- `POST /api/jobs/sync`: Manually trigger job sync
-
-## Custom Domain Setup
-
-To set up a custom domain for a tenant:
-
-1. Add the domain in the tenant settings in the admin panel
-2. Configure DNS settings to point to your application
-3. (Optional) Set up SSL certificates for the domain
-
-## Marketing Pixel Setup
-
-To set up marketing pixels for a tenant:
-
-1. Enable the Marketing Pixels feature for the tenant in the admin panel
-2. Configure the pixel IDs in the tenant's marketing configuration
-3. The pixels will be automatically loaded on the tenant's job board based on user consent
-
-## Environment Variables
-
-See `.env.example` for all required environment variables.
-
-## API Documentation
-
-The API documentation is available at `/api/docs` when running in development mode.
-
-## Regenerating Types
-
-If you make changes to the collection schemas, you'll need to regenerate the TypeScript types:
-
-```bash
-npm run generate:types
-```
-
-This will update the `src/payload-types.ts` file with the latest types based on your collection schemas.
-
-## Questions
-
-If you have any issues or questions, please reach out to the development team.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.

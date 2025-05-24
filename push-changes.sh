@@ -11,7 +11,7 @@ update_repo() {
     git add .
     
     # Commit changes
-    git commit -m "Add initial codebase structure and dependencies"
+    git commit -m "Docs: Add comprehensive project documentation and architecture overview"
     
     # Push to main branch
     git push origin main

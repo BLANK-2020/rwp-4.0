@@ -22,10 +22,14 @@ core_files=(
     "src/payload.config.ts"
     "src/lib/formatters.ts"
     "src/lib/caching.ts"
+    "src/collections"
+    "src/app"
     "middleware.ts"
     ".env.example"
     "tsconfig.json"
     "next.config.mjs"
+    "server.js"
+    "public"
 )
 
 # Tenant files
@@ -105,8 +109,11 @@ create_package_json() {
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^22.5.4",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
+    "cross-env": "^7.0.3",
     "eslint": "^9.16.0",
     "jest": "^29.7.0",
     "typescript": "5.7.3"
@@ -123,40 +130,58 @@ create_package_json "rwp-core" "Core infrastructure for the RWP platform" '{
     "@payloadcms/db-postgres": "3.33.0",
     "@payloadcms/next": "3.33.0",
     "next": "15.3.0",
-    "payload": "3.33.0"
+    "payload": "3.33.0",
+    "react": "^18",
+    "react-dom": "^18"
 }'
 
 create_package_json "rwp-tenants" "Multi-tenant management system" '{
     "rwp-core": "1.0.0",
-    "next": "15.3.0"
+    "next": "15.3.0",
+    "react": "^18",
+    "react-dom": "^18"
 }'
 
 create_package_json "rwp-jobboard" "Job board frontend" '{
     "rwp-core": "1.0.0",
     "rwp-events": "1.0.0",
-    "next": "15.3.0"
+    "next": "15.3.0",
+    "react": "^18",
+    "react-dom": "^18"
 }'
 
 create_package_json "rwp-analytics" "Analytics dashboard" '{
     "rwp-core": "1.0.0",
     "rwp-events": "1.0.0",
     "chart.js": "^4.4.9",
-    "react-chartjs-2": "^5.3.0"
+    "react-chartjs-2": "^5.3.0",
+    "next": "15.3.0",
+    "react": "^18",
+    "react-dom": "^18"
 }'
 
 create_package_json "rwp-retargeting" "Retargeting system" '{
     "rwp-core": "1.0.0",
-    "rwp-events": "1.0.0"
+    "rwp-events": "1.0.0",
+    "next": "15.3.0",
+    "react": "^18",
+    "react-dom": "^18"
 }'
 
 create_package_json "rwp-jobadder" "JobAdder ATS integration" '{
     "rwp-core": "1.0.0",
     "rwp-jobboard": "1.0.0",
-    "axios": "^1.9.0"
+    "axios": "^1.9.0",
+    "next": "15.3.0",
+    "react": "^18",
+    "react-dom": "^18"
 }'
 
 create_package_json "rwp-events" "Event tracking infrastructure" '{
-    "rwp-core": "1.0.0"
+    "rwp-core": "1.0.0",
+    "next": "15.3.0",
+    "react": "^18",
+    "react-dom": "^18"
 }'
 
 echo "Package.json files have been created for all repositories."
