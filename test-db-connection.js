@@ -7,7 +7,9 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URI || 'postgresql://YOUR_USERNAME:YOUR_PASSWORD@host:port/database',
+  connectionString:
+    process.env.DATABASE_URI ||
+    'postgresql://YOUR_USERNAME:YOUR_PASSWORD@your_host:your_port/your_database',
   ssl: {
     rejectUnauthorized: false,
   },
